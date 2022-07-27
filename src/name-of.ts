@@ -5,6 +5,7 @@ import { CallBackForPropertyAccess } from "./types";
  * @example
  * nameOf(student, (s) => s.age);         // "age"
  * nameOf(student, (s) => s.name.length); // "length"
+ * nameOf<Student>((s) => s.name.length); // "length"
  */
 export function nameOf<T>(callback: CallBackForPropertyAccess<T>): string;
 export function nameOf<T>(

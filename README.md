@@ -15,6 +15,7 @@ npm install ts-nameof-proxy
 ```ts
 nameOf(student, (s) => s.age); // "age"
 nameOf(student, (s) => s.name.length); // "length"
+nameOf<Student>((s) => s.name.length); // "length"
 
 separatedPathOf(student, (s) => s.age); // ["age"]
 separatedPathOf(student, (s) => s.name.length); // ["name", "length"]
