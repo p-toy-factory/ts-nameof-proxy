@@ -17,4 +17,12 @@ describe("nameOf", () => {
     expect(age).toBe("age");
     expect(length).toBe("length");
   });
+
+  test("Get the property name of the function", () => {
+    const name = nameOf(
+      (foo) => foo.bar,
+      (fn) => fn.call
+    );
+    expect(name).toBe("call");
+  });
 });

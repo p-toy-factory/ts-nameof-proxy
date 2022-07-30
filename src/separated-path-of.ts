@@ -34,7 +34,7 @@ export function separatedPathOf<T>(
 
   const proxy = new Proxy({}, handler);
   const callback = (
-    typeof arg1 === "function" ? arg1 : arg2
+    typeof arg2 === "function" ? arg2 : arg1
   ) as CallBackForPropertyAccess<T>;
 
   callback(proxy as T);

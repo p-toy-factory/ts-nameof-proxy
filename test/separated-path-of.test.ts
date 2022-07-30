@@ -24,4 +24,12 @@ describe("separatedPathOf", () => {
     expect(separatedPathIncludesAge).toEqual(["age"]);
     expect(separatedPathIncludesNameAndZero).toEqual(["name", "0"]);
   });
+
+  test("Get the separated path of the function", () => {
+    const separatedPathIncludesCall = separatedPathOf(
+      (foo) => foo.bar,
+      (fn) => fn.call
+    );
+    expect(separatedPathIncludesCall).toStrictEqual(["call"]);
+  });
 });
