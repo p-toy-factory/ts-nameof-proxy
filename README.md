@@ -2,7 +2,7 @@
 
 `nameof` in TypeScript, no compiler required. Implemented using proxy with some limitations.
 
-Referenced properties can be renamed in bulk by the editor.
+Type safely generate property name or path of variable, referenced properties can be renamed in bulk by the editor.
 
 ## Install
 
