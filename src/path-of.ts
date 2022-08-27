@@ -1,4 +1,4 @@
-import { separatedPathOf } from ".";
+import { pathsOf } from "./paths-of";
 import { NameSelector } from "./types";
 
 /**
@@ -13,9 +13,10 @@ export function pathOf<T>(
   arg1: T | NameSelector<T>,
   arg2?: NameSelector<T>
 ): string {
-  const separatedPath = separatedPathOf(arg1, arg2);
+  // @ts-ignore
+  const separatedPath = pathsOf(arg1, arg2);
   if (separatedPath.length === 0) {
     throw new Error("ts-nameof-proxy: No properties were read.");
   }
-  return "['" + separatedPath.join("']['") + "']";
+  return separatedPath[0];
 }
