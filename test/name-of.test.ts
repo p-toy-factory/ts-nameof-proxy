@@ -20,7 +20,7 @@ describe("nameOf", () => {
 
   test("Get the property name of the function", () => {
     const name = nameOf(
-      (foo) => foo.bar,
+      () => {},
       (fn) => fn.call
     );
     expect(name).toBe("call");

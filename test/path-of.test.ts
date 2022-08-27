@@ -14,7 +14,7 @@ describe("pathOf", () => {
 
   test("Get the path of the function", () => {
     const path = pathOf(
-      (foo) => foo.bar,
+      () => {},
       (fn) => fn.call
     );
     expect(path).toBe("['call']");
