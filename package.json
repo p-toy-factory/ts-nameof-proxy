@@ -10,14 +10,23 @@
   "homepage": "https://github.com/PinkChampagne17/ts-nameof-proxy",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
+    "build": "rimraf ./dist && rollup --config",
     "test": "jest",
     "prepare": "husky install"
   },
   "sideEffects": false,
-  "main": "dist/ts-nameof-proxy.js",
-  "module": "src/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.umd.js"
+    }
+  },
   "files": [
     "dist/**/*.*"
   ],
@@ -27,14 +36,16 @@
     "@babel/preset-typescript": "^7.16.7",
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
+    "@rollup/plugin-typescript": "^8.5.0",
     "@types/jest": "^27.5.1",
     "babel-jest": "^28.1.0",
     "husky": "^8.0.1",
     "jest": "^28.1.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.79.0",
+    "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^28.0.2",
-    "ts-loader": "^9.3.0",
-    "typescript": "^4.6.4",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4"
   }
 }

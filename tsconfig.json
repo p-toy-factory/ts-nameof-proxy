@@ -1,17 +1,18 @@
 {
     "include": [
-        "src/**/*",
-        "test/**/*"
+        "./src",
     ],
     "compilerOptions": {
-        "outDir": "./dist/",
+        "rootDir": "./src",
+        "outDir": "./dist",
         "noImplicitAny": true,
         "module": "ESNext",
         "target": "ESNext",
         "allowJs": true,
         "moduleResolution": "node",
         "declaration": true,
-        "declarationMap": true,
         "strictNullChecks": true,
-    }
+        "resolveJsonModule": true,
+        "noEmitOnError": true,
+    },
 }
