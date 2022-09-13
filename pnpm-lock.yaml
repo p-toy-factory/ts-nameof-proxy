@@ -11,6 +11,7 @@ specifiers:
   babel-jest: ^28.1.0
   husky: ^8.0.1
   jest: ^28.1.0
+  prettier: ^2.7.1
   rimraf: ^3.0.2
   rollup: ^2.79.0
   rollup-plugin-terser: ^7.0.2
@@ -29,6 +30,7 @@ devDependencies:
   babel-jest: 28.1.0_@babel+core@7.18.13
   husky: 8.0.1
   jest: 28.1.3
+  prettier: 2.7.1
   rimraf: 3.0.2
   rollup: 2.79.0
   rollup-plugin-terser: 7.0.2_rollup@2.79.0
@@ -2273,8 +2275,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      is-text-path: 1.0.1
       JSONStream: 1.3.5
+      is-text-path: 1.0.1
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -3660,6 +3662,12 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 4.1.0
+    dev: true
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /pretty-format/27.5.1:
