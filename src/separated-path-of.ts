@@ -1,4 +1,4 @@
-import { CallBackForPropertyAccess } from "./types";
+import { NameSelector } from "./types";
 
 /**
  * @example
@@ -6,17 +6,15 @@ import { CallBackForPropertyAccess } from "./types";
  * separatedPathOf(student, (s) => s.name.length);  // ["name", "length"]
  * separatedPathOf<Student>((s) => s.name.length);  // ["name", "length"]
  */
-export function separatedPathOf<T>(
-  callback: CallBackForPropertyAccess<T>
-): string[];
+export function separatedPathOf<T>(callback: NameSelector<T>): string[];
 export function separatedPathOf<T>(
   obj: T,
-  callback?: CallBackForPropertyAccess<T>
+  callback?: NameSelector<T>
 ): string[];
 
 export function separatedPathOf<T>(
-  arg1: T | CallBackForPropertyAccess<T>,
-  arg2?: CallBackForPropertyAccess<T>
+  arg1: T | NameSelector<T>,
+  arg2?: NameSelector<T>
 ): string[] {
   const path: string[] = [];
 
