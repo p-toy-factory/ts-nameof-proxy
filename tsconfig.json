@@ -10,7 +10,6 @@
         "target": "ESNext",
         "allowJs": true,
         "moduleResolution": "node",
-        "declaration": true,
         "strictNullChecks": true,
         "resolveJsonModule": true,
         "noEmitOnError": true,
