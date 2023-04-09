@@ -1,6 +1,6 @@
 {
   "name": "ts-nameof-proxy",
-  "version": "0.1.0",
+  "version": "0.1.14514",
   "description": "`nameof` in TypeScript, no compiler required. Implemented using proxy with some limitations.",
   "keywords": [
     "nameof",

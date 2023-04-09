@@ -1,3 +1,15 @@
+## 0.1.14514
+
+**breaking changes:**
+
+- deprecate type `CallBackForPropertyAccess`
+- only a Typescript declaration file index.d.ts right now
+
+**features:**
+
+- add type `NameSelector`
+- add functions `unstable_nameOf`, `unstable_pathsOf` and `unstable_separatedPathsOf`
+
 ## 0.1.0
 
 ### 🐞 Bug Fixes
