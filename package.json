@@ -7,7 +7,7 @@
     "formik"
   ],
   "author": "pinkchampagne",
-  "homepage": "https://github.com/PinkChampagne17/ts-nameof-proxy",
+  "homepage": "https://github.com/p-toy-factory/ts-nameof-proxy",
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./dist && rollup --config",
