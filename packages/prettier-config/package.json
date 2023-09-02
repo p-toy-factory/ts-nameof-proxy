@@ -1,0 +1,9 @@
+{
+	"name": "prettier-config",
+	"version": "1.0.0",
+	"main": "index.cjs",
+	"license": "MIT",
+	"peerDependencies": {
+		"prettier": ">= 3"
+	}
+}
