@@ -1,12 +1,23 @@
 {
 	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/p-toy-factory/ts-nameof-proxy"
+	},
 	"packageManager": "pnpm@8.7.5",
 	"scripts": {
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"check": "beachball check",
+		"release": "beachball publish -y -m \"chore(release): applying package updates\"",
+		"change": "beachball change",
+		"build": "pnpm -C packages/ts-nameof-proxy run build",
+		"lint": "pnpm -C packages/ts-nameof-proxy run lint",
+		"test": "pnpm -C packages/ts-nameof-proxy run test"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^17.0.3",
 		"@commitlint/config-conventional": "^17.0.3",
+		"beachball": "^2.37.0",
 		"husky": "^8.0.1",
 		"prettier": "^2.7.1"
 	}
