@@ -38,30 +38,30 @@ nameOf(student, (student) => student); // "student"
 
 ```tsx
 const people = [
-  { name: { firstName: "John", lastName: "Doe" } },
-  { name: { firstName: "Jane", lastName: "Smith" } },
+	{ name: { firstName: "John", lastName: "Doe" } },
+	{ name: { firstName: "Jane", lastName: "Smith" } },
 ];
 
 <Formik initialValues={people} onSubmit={() => {}}>
-  <Form>
-    {({ values }) =>
-      values.map((person, index) => (
-        <div key={person.name.firstName}>
-          <Field
-            name={pathOf(values, (values) => values[index].name.firstName)}
-          />
-          <Field
-            name={pathOf(values, (values) => values[index].name.lastName)}
-          />
-        </div>
-      ))
-    }
-    {/* 
+	<Form>
+		{({ values }) =>
+			values.map((person, index) => (
+				<div key={person.name.firstName}>
+					<Field
+						name={pathOf(values, (values) => values[index].name.firstName)}
+					/>
+					<Field
+						name={pathOf(values, (values) => values[index].name.lastName)}
+					/>
+				</div>
+			))
+		}
+		{/* 
       <Field name="['0']['name']['firstName']" />
       <Field name="['0']['name']['lastName']" />
       <Field name="['1']['name']['firstName']" />
       <Field name="['1']['name']['lastName']" /> 
     */}
-  </Form>
+	</Form>
 </Formik>;
 ```

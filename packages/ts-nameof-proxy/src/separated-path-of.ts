@@ -9,13 +9,13 @@ import { NameSelector } from "./types";
  */
 export function separatedPathOf<T>(callback: NameSelector<T>): string[];
 export function separatedPathOf<T>(
-  obj: T,
-  callback?: NameSelector<T>
+	obj: T,
+	callback?: NameSelector<T>
 ): string[];
 
 export function separatedPathOf<T>(
-  arg1: T | NameSelector<T>,
-  arg2?: NameSelector<T>
+	arg1: T | NameSelector<T>,
+	arg2?: NameSelector<T>
 ): string[] {
-  return separatedPathsOf(arg1, arg2)[0] ?? [];
+	return separatedPathsOf(arg1, arg2)[0] ?? [];
 }

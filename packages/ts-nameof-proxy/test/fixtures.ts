@@ -1,4 +1,4 @@
 export const student = {
-  name: "Yaju senpai",
-  age: 24,
+	name: "Yaju senpai",
+	age: 24,
 };

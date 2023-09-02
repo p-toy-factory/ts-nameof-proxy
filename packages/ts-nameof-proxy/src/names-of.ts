@@ -10,8 +10,8 @@ export function namesOf<T>(callback: NameSelector<T>): string[];
 export function namesOf<T>(obj: T, callback: NameSelector<T>): string[];
 
 export function namesOf<T>(
-  arg1: T | NameSelector<T>,
-  arg2?: NameSelector<T>
+	arg1: T | NameSelector<T>,
+	arg2?: NameSelector<T>
 ): string[] {
-  return separatedPathsOf(arg1, arg2).map((path) => path[path.length - 1]);
+	return separatedPathsOf(arg1, arg2).map((path) => path[path.length - 1]);
 }
