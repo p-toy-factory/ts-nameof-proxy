@@ -3,4 +3,7 @@
 # OTHERWISE git-blame WILL CRASH IN ANY REPOSITORY WITHOUT SUCH A FILE
 
 # prettier config changes
-9aa6e5f7d7639211be55abcf955e3c094c00f1cb
+60e64c7080fffc13a0480fc95847fb41f05e5042
+
+# ESLint error fix
+5b7d9d3f81292685f0beb1fcf115de58ab61aad8
