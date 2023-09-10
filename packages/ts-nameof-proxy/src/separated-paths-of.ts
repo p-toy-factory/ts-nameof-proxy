@@ -1,4 +1,5 @@
 import { NameSelector } from "./types";
+import { last } from "./utils";
 
 /**
  * @example
@@ -25,7 +26,7 @@ export function separatedPathsOf<T>(
 	return paths;
 }
 
-const emptyObj = {};
+const emptyObj = Object.freeze({});
 
 function generateProxyHandler(
 	paths: string[][],
@@ -44,7 +45,7 @@ function generateProxyHandler(
 				const handler = generateProxyHandler(paths, false);
 				return new Proxy(emptyObj, handler);
 			}
-			paths[paths.length - 1].push(property);
+			last(paths).push(property);
 			return receiver;
 		},
 	};
