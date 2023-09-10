@@ -24,8 +24,7 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.mjs",
-			"require": "./dist/index.js",
-			"default": "./dist/index.umd.js"
+			"require": "./dist/index.js"
 		}
 	},
 	"files": [

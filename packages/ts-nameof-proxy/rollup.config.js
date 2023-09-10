@@ -15,17 +15,11 @@ export default [
 			{
 				file: "./dist/index.min.mjs",
 				format: "esm",
-				sourcemap: "hidden",
 				plugins: [terser()],
 			},
 			{
 				file: "./dist/index.js",
 				format: "cjs",
-			},
-			{
-				file: "./dist/index.umd.js",
-				format: "umd",
-				name: "ts-nameof-proxy",
 			},
 		],
 	}),
