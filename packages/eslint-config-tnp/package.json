@@ -1,0 +1,20 @@
+{
+	"name": "eslint-config-tnp",
+	"version": "1.0.0",
+	"description": "",
+	"author": "pinkchampagne",
+	"private": true,
+	"main": "index.js",
+	"dependencies": {
+		"@eslint/js": "^8.43.0",
+		"eslint-plugin-import": "npm:eslint-plugin-i@^2.28.1",
+		"eslint-import-resolver-typescript": "^3.6.0",
+		"eslint-plugin-simple-import-sort": "^10.0.0",
+		"globals": "^13.20.0"
+	},
+	"peerDependencies": {
+		"@typescript-eslint/eslint-plugin": "^6.6.0",
+		"@typescript-eslint/parser": "^6.6.0",
+		"eslint": ">= 8"
+	}
+}
