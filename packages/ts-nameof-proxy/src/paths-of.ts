@@ -14,6 +14,6 @@ export function pathsOf<T>(
 	arg2?: NameSelector<T>
 ): string[] {
 	return separatedPathsOf(arg1, arg2).map(
-		(separatedPath) => "['" + separatedPath.join("']['") + "']"
+		(separatedPath) => `['${separatedPath.join("']['")}']`
 	);
 }

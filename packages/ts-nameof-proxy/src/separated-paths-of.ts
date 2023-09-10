@@ -30,6 +30,7 @@ const emptyObj = {};
 function generateProxyHandler(
 	paths: string[][],
 	isFirst: boolean
+	// eslint-disable-next-line @typescript-eslint/ban-types
 ): ProxyHandler<Object> {
 	return {
 		get(_target, property, receiver) {
@@ -42,10 +43,9 @@ function generateProxyHandler(
 				paths.push([property]);
 				const handler = generateProxyHandler(paths, false);
 				return new Proxy(emptyObj, handler);
-			} else {
-				paths[paths.length - 1].push(property);
-				return receiver;
 			}
+			paths[paths.length - 1].push(property);
+			return receiver;
 		},
 	};
 }
