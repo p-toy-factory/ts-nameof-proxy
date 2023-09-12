@@ -1,0 +1,7 @@
+{
+  "type": "major",
+  "comment": "build!: remove comment and not build UMD version",
+  "packageName": "ts-nameof-proxy",
+  "email": "45930107+PinkChampagne17@users.noreply.github.com",
+  "dependentChangeType": "patch"
+}
