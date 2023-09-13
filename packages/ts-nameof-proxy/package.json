@@ -11,8 +11,8 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "rimraf ./dist && rollup --config",
-		"lint": "eslint src",
-		"lint:fix": "npm run lint -- --fix",
+		"lint": "eslint src --cache && prettier --check src",
+		"lint:fix": "eslint src --cache --fix  && prettier --write src",
 		"test": "jest"
 	},
 	"sideEffects": false,
