@@ -1,26 +1,26 @@
 {
-  "name": "ts-nameof-proxy",
-  "entries": [
-    {
-      "date": "Sun, 17 Sep 2023 10:01:16 GMT",
-      "version": "1.0.0",
-      "tag": "ts-nameof-proxy_v1.0.0",
-      "comments": {
-        "major": [
-          {
-            "author": "45930107+PinkChampagne17@users.noreply.github.com",
-            "package": "ts-nameof-proxy",
-            "commit": "0bbead0654fcbb8f504b2f1f17e792cfea372218",
-            "comment": "build!: remove comment and not build UMD version"
-          },
-          {
-            "author": "45930107+PinkChampagne17@users.noreply.github.com",
-            "package": "ts-nameof-proxy",
-            "commit": "0bbead0654fcbb8f504b2f1f17e792cfea372218",
-            "comment": "feat!: rename the functions and remove deprecated type"
-          }
-        ]
-      }
-    }
-  ]
+	"name": "ts-nameof-proxy",
+	"entries": [
+		{
+			"date": "Sun, 17 Sep 2023 10:01:16 GMT",
+			"version": "1.0.1",
+			"tag": "ts-nameof-proxy_v1.0.1",
+			"comments": {
+				"major": [
+					{
+						"author": "45930107+PinkChampagne17@users.noreply.github.com",
+						"package": "ts-nameof-proxy",
+						"commit": "0bbead0654fcbb8f504b2f1f17e792cfea372218",
+						"comment": "build!: remove comment and not build UMD version"
+					},
+					{
+						"author": "45930107+PinkChampagne17@users.noreply.github.com",
+						"package": "ts-nameof-proxy",
+						"commit": "0bbead0654fcbb8f504b2f1f17e792cfea372218",
+						"comment": "feat!: rename the functions and remove deprecated type"
+					}
+				]
+			}
+		}
+	]
 }

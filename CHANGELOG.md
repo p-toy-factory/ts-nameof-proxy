@@ -1,3 +1,16 @@
+## 1.0.1
+
+**breaking changes:**
+
+- rename type `CallBackForPropertyAccess` to `NameSelector`.
+- rename function `separatedPathOf` to `pathOf`.
+- rename function `pathOf` to `pathStringOf`.
+- remove UMD build.
+
+**features:**
+
+- add functions `namesOf`, `pathStringsOf` and `PathsOf`
+
 ## 0.1.14514
 
 **breaking changes:**
