@@ -1,7 +1,0 @@
-{
-  "type": "major",
-  "comment": "feat!: rename the functions and remove deprecated type",
-  "packageName": "ts-nameof-proxy",
-  "email": "45930107+PinkChampagne17@users.noreply.github.com",
-  "dependentChangeType": "patch"
-}
