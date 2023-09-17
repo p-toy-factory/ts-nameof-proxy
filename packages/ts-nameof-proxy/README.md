@@ -36,11 +36,11 @@ pathStringsOf<Student>((s) => (s.name, s.name.firstName[0])); // ["['name']", "[
 
 ## Limitations
 
-The example below is not feasible:
+The example below is NOT feasible:
 
 ```ts
-nameOf(student); // "student"
-nameOf(student, (student) => student); // "student"
+nameOf(student); // ❌ Will throw error
+nameOf(student, (student) => student); // ❌ Will throw error
 ```
 
 ## Example
