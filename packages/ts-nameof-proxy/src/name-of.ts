@@ -11,11 +11,11 @@ export function nameOf<T>(selector: NameSelector<T>): string;
 export function nameOf<T>(obj: T, selector: NameSelector<T>): string;
 
 export function nameOf<T>(
-	arg1: T | NameSelector<T>,
-	arg2?: NameSelector<T>
+	objOrSelector: T | NameSelector<T>,
+	selectorOrNil?: NameSelector<T>
 ): string {
 	// @ts-ignore
-	const names = namesOf(arg1, arg2);
+	const names = namesOf(objOrSelector, selectorOrNil);
 	if (names.length === 0) {
 		throw new Error("ts-nameof-proxy: No properties were read.");
 	}

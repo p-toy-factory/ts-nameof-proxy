@@ -10,14 +10,14 @@ export function pathsOf<T>(selector: NameSelector<T>): string[][];
 export function pathsOf<T>(obj: T, selector?: NameSelector<T>): string[][];
 
 export function pathsOf<T>(
-	arg1: T | NameSelector<T>,
-	arg2?: NameSelector<T>
+	objOrSelector: T | NameSelector<T>,
+	selectorOrNil?: NameSelector<T>
 ): string[][] {
 	const paths: string[][] = [];
 	const handler = generateProxyHandler(paths, true);
 	const proxy = new Proxy(emptyObj, handler);
 	const selector = (
-		typeof arg2 === "function" ? arg2 : arg1
+		typeof selectorOrNil === "function" ? selectorOrNil : objOrSelector
 	) as NameSelector<T>;
 	selector(proxy as T);
 	return paths;

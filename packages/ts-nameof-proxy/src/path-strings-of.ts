@@ -10,10 +10,10 @@ export function pathStringsOf<T>(selector: NameSelector<T>): string[];
 export function pathStringsOf<T>(obj: T, selector: NameSelector<T>): string[];
 
 export function pathStringsOf<T>(
-	arg1: T | NameSelector<T>,
-	arg2?: NameSelector<T>
+	objOrSelector: T | NameSelector<T>,
+	selectorOrNil?: NameSelector<T>
 ): string[] {
-	return pathsOf(arg1, arg2).map(mapper);
+	return pathsOf(objOrSelector, selectorOrNil).map(mapper);
 }
 
 function mapper(separatedPath: string[]) {
