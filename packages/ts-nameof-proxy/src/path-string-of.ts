@@ -6,8 +6,8 @@ import { NameSelector } from "./types";
  * pathStringOf(student, (s) => s.name.firstName[0]); // "['name']['firstName']['0']"
  * pathStringOf<Student>((s) => s.name.firstName[0]); // "['name']['firstName']['0']"
  */
-export function pathStringOf<T>(callback: NameSelector<T>): string;
-export function pathStringOf<T>(obj: T, callback: NameSelector<T>): string;
+export function pathStringOf<T>(selector: NameSelector<T>): string;
+export function pathStringOf<T>(obj: T, selector: NameSelector<T>): string;
 
 export function pathStringOf<T>(
 	arg1: T | NameSelector<T>,

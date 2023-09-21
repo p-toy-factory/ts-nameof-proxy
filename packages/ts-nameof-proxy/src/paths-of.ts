@@ -6,8 +6,8 @@ import { last } from "./utils";
  * pathsOf(student, (s) => (s.age, s.name.length));  // [["age"], ["name", "length"]]
  * pathsOf<Student>((s) => (s.age, s.name.length));  // [["age"], ["name", "length"]]
  */
-export function pathsOf<T>(callback: NameSelector<T>): string[][];
-export function pathsOf<T>(obj: T, callback?: NameSelector<T>): string[][];
+export function pathsOf<T>(selector: NameSelector<T>): string[][];
+export function pathsOf<T>(obj: T, selector?: NameSelector<T>): string[][];
 
 export function pathsOf<T>(
 	arg1: T | NameSelector<T>,
@@ -16,10 +16,10 @@ export function pathsOf<T>(
 	const paths: string[][] = [];
 	const handler = generateProxyHandler(paths, true);
 	const proxy = new Proxy(emptyObj, handler);
-	const callback = (
+	const selector = (
 		typeof arg2 === "function" ? arg2 : arg1
 	) as NameSelector<T>;
-	callback(proxy as T);
+	selector(proxy as T);
 	return paths;
 }
 

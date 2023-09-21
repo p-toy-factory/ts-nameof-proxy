@@ -7,8 +7,8 @@ import { NameSelector } from "./types";
  * nameOf(student, (s) => s.name.length); // "length"
  * nameOf<Student>((s) => s.name.length); // "length"
  */
-export function nameOf<T>(callback: NameSelector<T>): string;
-export function nameOf<T>(obj: T, callback: NameSelector<T>): string;
+export function nameOf<T>(selector: NameSelector<T>): string;
+export function nameOf<T>(obj: T, selector: NameSelector<T>): string;
 
 export function nameOf<T>(
 	arg1: T | NameSelector<T>,
