@@ -69,11 +69,12 @@ const people = [
 			))
 		}
 		{/*
-      <Field name="['0']['name']['firstName']" />
-      <Field name="['0']['name']['lastName']" />
-      <Field name="['1']['name']['firstName']" />
-      <Field name="['1']['name']['lastName']" />
-    */}
+			Output:
+			<Field name="['0']['name']['firstName']" />
+			<Field name="['0']['name']['lastName']" />
+			<Field name="['1']['name']['firstName']" />
+			<Field name="['1']['name']['lastName']" />
+		*/}
 	</Form>
 </Formik>;
 ```
