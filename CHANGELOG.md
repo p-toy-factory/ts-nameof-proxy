@@ -5,6 +5,7 @@
 - rename type `CallBackForPropertyAccess` to `NameSelector`.
 - rename function `separatedPathOf` to `pathOf`.
 - rename function `pathOf` to `pathStringOf`.
+- remove functions `unstable_namesOf`, `unstable_pathsOf` and `unstable_separatedPathsOf`
 - remove UMD build.
 
 **features:**
