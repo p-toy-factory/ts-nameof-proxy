@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["nameof", "pinkchampagne"],
+  "cSpell.words": ["nameof", "pinkchampagne", "rambda", "unplugin"],
   "eslint.experimental.useFlatConfig": true,
   "eslint.workingDirectories": [
     {
