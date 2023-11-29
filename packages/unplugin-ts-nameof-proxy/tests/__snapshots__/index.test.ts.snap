@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Expect code will be optimized 1`] = `
+"import { nameOf, namesOf, pathOf, pathsOf, pathStringOf, pathStringsOf } from "ts-nameof-proxy";
+"length";
+["toString", "length"];
+["name", "length", "toString"];
+[["name", "length", "toString"]];
+[["name", "length", "toString"], ["name", "length"]];
+"['name']['length']['toString']";
+["['name']['length']['toString']", "['name']['length']"];"
+`;
+
+exports[`Expect code won't be optimized 1`] = `
+"import { nameOf, namesOf, pathOf, pathsOf, pathStringOf, pathStringsOf } from "ts-nameof-proxy";
+nameOf(f => f);
+nameOf(f => {
+  return f;
+});
+String(pathsOf);
+pathsOf(["2"][1][""][index].length);
+pathsOf(f => [f.name.length.toString, f.name.length]);
+pathsOf(f => [f.name, f]);
+pathsOf(f => [f.name, globalThis.fetch]);"
+`;
