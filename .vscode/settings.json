@@ -3,7 +3,9 @@
 		"nameof",
 		"oxfmt",
 		"oxlint",
-		"pinkchampagne"
+		"pinkchampagne",
+		"rambda",
+		"unplugin"
 	],
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "eslint.experimental.useFlatConfig": true,
