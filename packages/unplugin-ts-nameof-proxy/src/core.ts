@@ -3,13 +3,10 @@ import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { NodePath } from "babel__traverse";
-import { Either as E, Function as F, Option as O } from "effect";
-import { head, identity, last, map, pipe as flow } from "rambda";
-import { match } from "ts-pattern";
+import { equals, head, identity, last, length, map, pipe } from "rambda";
+import { match, P } from "ts-pattern";
 
 /**
- * @throws {TypeError}
- *
  * @example
  * ```
  * const ast = parse("a.b.c");
@@ -19,30 +16,20 @@ import { match } from "ts-pattern";
 function getInitialObjectNameOfMemberExpression(
 	node: t.MemberExpression,
 ): string {
-	switch (node.object.type) {
-		case "Identifier":
-			return node.object.name;
-
-		case "MemberExpression":
-			return getInitialObjectNameOfMemberExpression(node.object);
-
-		default:
-			throw new TypeError(
-				`Unexpected node type: ${node.object.type} from ${generate(node).code}`,
-			);
-	}
+	return match(node.object)
+		.when(t.isIdentifier, (object) => object.name)
+		.when(t.isMemberExpression, getInitialObjectNameOfMemberExpression)
+		.otherwise(() => {
+			throw new TypeError(`Unexpected node type: ${node.object.type}`);
+		});
 }
 
-function parseNameOrPathToAST(
-	nameOrPath: string | string[] | string[][],
-): t.ArrayExpression | t.StringLiteral {
-	if (typeof nameOrPath === "string") {
-		const name = nameOrPath;
-		return t.stringLiteral(name);
-	}
-	const path = nameOrPath;
-	const pathAST = path.map((property) => parseNameOrPathToAST(property));
-	return t.arrayExpression(pathAST);
+function propertiesToAST(
+	properties: string | string[] | string[][],
+): t.StringLiteral | t.ArrayExpression {
+	return match(properties)
+		.with(P.string, t.stringLiteral)
+		.otherwise(pipe(map(propertiesToAST), t.arrayExpression));
 }
 
 /**
@@ -57,28 +44,47 @@ function toPathString(path: string[]) {
 }
 
 const pathsOf = identity<string[][]>;
-const pathOf = flow(pathsOf, head<string[][]>);
-const pathStringsOf = flow(pathsOf, map(toPathString));
-const pathStringOf = flow(pathStringsOf, head<string[]>);
-const namesOf = flow(pathsOf, map(last<string[]>));
-const nameOf = flow(namesOf, head<string[]>);
+const pathOf = pipe(pathsOf, head<string[][]>);
+const pathStringsOf = pipe(pathsOf, map(toPathString));
+const pathStringOf = pipe(pathStringsOf, head<string[]>);
+const namesOf = pipe(pathsOf, map(last<string[]>));
+const nameOf = pipe(namesOf, head<string[]>);
 
-type PathMapper = (paths: string[][]) => string | string[] | string[][];
-
-const pathMappers = {
+const propertiesMappers = {
 	nameOf,
 	namesOf,
 	pathOf,
 	pathsOf,
 	pathStringOf,
 	pathStringsOf,
-} satisfies Record<string, PathMapper>;
-
-const exportedFunctionNames = Object.keys(pathMappers) as Array<
-	keyof typeof pathMappers
+} satisfies Record<
+	string,
+	(paths: string[][]) => string | string[] | string[][]
 >;
 
-export function getCallExpressionToTransform(path: NodePath<t.Identifier>) {
+const exportedFunctionNames = Object.keys(propertiesMappers) as Array<
+	keyof typeof propertiesMappers
+>;
+
+function isCalleeIdentifierToTransform(
+	path: NodePath<t.Identifier>,
+	parentPath: NodePath<t.Node>,
+	moduleSource: string,
+): parentPath is NodePath<t.CallExpression> {
+	if (path.parentPath !== parentPath) {
+		throw new TypeError("path.parentPath !== parentPath");
+	}
+	return (
+		path.parentPath.isCallExpression() &&
+		exportedFunctionNames.some((name) =>
+			path.referencesImport(moduleSource, name),
+		)
+	);
+}
+
+const isEmptyArray = pipe(length, equals(0));
+
+export function tryGetCallExpressionToTransform(path: NodePath<t.Identifier>) {
 	const { parentPath } = path;
 	if (
 		parentPath.isCallExpression() &&
@@ -88,71 +94,84 @@ export function getCallExpressionToTransform(path: NodePath<t.Identifier>) {
 		// Avoid the expressions like `String(pathStringOf)`
 		parentPath.node.callee === path.node
 	) {
-		return O.some({
+		return {
 			callExpressionPath: parentPath,
-			functionName: path.node.name as keyof typeof pathMappers,
-		});
+			functionName: path.node.name as keyof typeof propertiesMappers,
+		};
 	}
-	return O.none();
+	return undefined;
 }
 
-export function getInlineArrowFunctionSelector(
+export function tryGetInlineArrowFunctionSelector(
 	callExpressionPath: NodePath<t.CallExpression>,
-): E.Either<t.ArrowFunctionExpression | t.FunctionExpression, string> {
+) {
 	const args = callExpressionPath.node.arguments;
 	const selector = args[1] ?? args[0];
 	if (
 		selector &&
 		(t.isFunctionExpression(selector) || t.isArrowFunctionExpression(selector))
 	) {
-		return E.right(selector);
+		return {
+			selector,
+		};
 	}
-	return E.left("Invalid function call");
+	return undefined;
 }
 
-/**
- * @todo Support `FunctionExpression`
- */
-export function getMemberExpressionsToTransform(
-	selector: t.ArrowFunctionExpression | t.FunctionExpression,
-): E.Either<t.MemberExpression[], string> {
+export function getMemberExpressionsIfCanBeTransformed(
+	selector: t.FunctionExpression | t.ArrowFunctionExpression,
+) {
 	if (!t.isArrowFunctionExpression(selector)) {
-		return E.left("Not support FunctionExpression yet");
+		return undefined;
 	}
 
 	const selectorParam = selector.params[0];
 	if (!t.isIdentifier(selectorParam)) {
-		return E.left("The selector not have parameter");
+		return undefined;
 	}
 
-	const memberExpressions = match(selector.body)
-		.when(t.isMemberExpression, (selectorBody) => [selectorBody])
-		.when(t.isSequenceExpression, (selectorBody) =>
-			selectorBody.expressions.filter((expr) => t.isMemberExpression(expr)),
-		)
-		.otherwise(() => []);
+	const memberExpressions = (() => {
+		switch (selector.body.type) {
+			case "MemberExpression":
+				return [selector.body];
 
-	if (memberExpressions.length === 0) {
-		return E.left("Invalid selector body");
-	}
+			case "SequenceExpression": {
+				if (
+					selector.body.expressions.length > 0 &&
+					selector.body.expressions.every((expr) => t.isMemberExpression(expr))
+				) {
+					return selector.body.expressions as t.MemberExpression[];
+				}
+			}
+
+			default:
+				// The body of node of identify function is a identifier node
+				return [];
+		}
+	})();
 
 	// ✅ nameOf(p => p.name.length)
 	// ❌ nameOf(p => a.name.length)
 	const proxyName = selectorParam.name;
 	const hasUnexpectedSelector = memberExpressions.some((expr) => {
-		const initialObjectName = getInitialObjectNameOfMemberExpression(expr);
-		return proxyName !== initialObjectName;
+		try {
+			const initialObjectName = getInitialObjectNameOfMemberExpression(expr);
+			return proxyName !== initialObjectName;
+		} catch (error) {
+			console.log(error);
+			return true;
+		}
 	});
 
-	if (hasUnexpectedSelector) {
-		return E.left("The selector's parameter not be used");
+	if (hasUnexpectedSelector || memberExpressions.length === 0) {
+		return undefined;
 	}
-	return E.right(memberExpressions);
+
+	return {
+		memberExpressions,
+	};
 }
 
-/**
- * @throws {TypeError}
- */
 function getMemberExpressionPropertyString(expr: t.MemberExpression): string {
 	const { property } = expr;
 	switch (property.type) {
@@ -164,17 +183,10 @@ function getMemberExpressionPropertyString(expr: t.MemberExpression): string {
 			return property.value.toString();
 
 		default:
-			throw new TypeError(
-				`Unexpected property type: '${property.type}' from expression: ${
-					generate(expr).code
-				}`,
-			);
+			throw new TypeError(`Unexpected property type: '${property.type}'`);
 	}
 }
 
-/**
- * @throws {TypeError}
- */
 function getMemberExpressionPath(expr: t.MemberExpression): string[] {
 	const name = getMemberExpressionPropertyString(expr);
 
@@ -187,45 +199,49 @@ function getMemberExpressionPath(expr: t.MemberExpression): string[] {
 	}
 }
 
-/**
- * @throws {TypeError}
- */
 function identifierVisitor(path: NodePath<t.Identifier>) {
-	const callExpressionPathOption = getCallExpressionToTransform(path);
-	if (O.isNone(callExpressionPathOption)) {
+	const callExpressionPathResult = tryGetCallExpressionToTransform(path);
+	if (!callExpressionPathResult) {
 		return;
 	}
-	const { callExpressionPath, functionName } = callExpressionPathOption.value;
+	const { callExpressionPath, functionName } = callExpressionPathResult;
 
-	const selectorOption = getInlineArrowFunctionSelector(callExpressionPath);
-	if (E.isLeft(selectorOption)) {
-		console.warn(
-			"warning:",
-			selectorOption.left,
-			generate(callExpressionPath.node).code,
-		);
+	const selectorResult = tryGetInlineArrowFunctionSelector(callExpressionPath);
+	if (!selectorResult) {
 		return;
 	}
-	const selector = selectorOption.right;
+	const { selector } = selectorResult;
 
-	const memberExpressionsOption = getMemberExpressionsToTransform(selector);
-	if (E.isLeft(memberExpressionsOption)) {
-		console.warn(
-			"warning:",
-			memberExpressionsOption.left,
-			generate(selector).code,
-		);
+	const memberExpressionsResult =
+		getMemberExpressionsIfCanBeTransformed(selector);
+	if (!memberExpressionsResult) {
 		return;
 	}
-	const memberExpressions = memberExpressionsOption.right;
+	const { memberExpressions } = memberExpressionsResult;
 
-	const paths = memberExpressions.map((expr) => getMemberExpressionPath(expr));
-	const pathMapper = pathMappers[functionName];
-	F.pipe(
-		paths,
-		pathMapper,
-		parseNameOrPathToAST,
-		(ast) => callExpressionPath.replaceWith(ast), //
+	let hasUnexpectedNodeType = false;
+
+	const propertiesArrays = memberExpressions.reduce<string[][]>(
+		(propertiesArrays, expr) => {
+			try {
+				const properties = getMemberExpressionPath(expr);
+				return [...propertiesArrays, properties];
+			} catch (error) {
+				console.log(error);
+				hasUnexpectedNodeType = true;
+				return propertiesArrays;
+			}
+		},
+		[],
+	);
+
+	if (hasUnexpectedNodeType) {
+		return;
+	}
+
+	const mapper = propertiesMappers[functionName];
+	pipe(mapper, propertiesToAST, (ast) => callExpressionPath.replaceWith(ast))(
+		propertiesArrays,
 	);
 }
 
@@ -235,7 +251,9 @@ export function transform(code: string): string {
 	});
 
 	traverse(ast, {
-		Identifier: identifierVisitor,
+		Identifier(path) {
+			identifierVisitor(path);
+		},
 	});
 
 	return generate(ast).code;

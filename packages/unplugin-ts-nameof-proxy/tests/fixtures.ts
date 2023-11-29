@@ -8,21 +8,21 @@ function withImportStatements(code: string) {
 }
 
 export const codeToOptimize = withImportStatements(`
-	nameOf((f) => f.name.length)
-	namesOf((f) => (f.name.length.toString, f.name.length))
-	pathOf((f) => f.name.length.toString)
-	pathsOf((f) => f.name.length.toString)
-	pathsOf((f) => (f.name.length.toString, f.name.length))
-	pathStringOf((f) => f.name.length.toString)
-	pathStringsOf((f) => (f.name.length.toString, f.name.length))
+nameOf((f) => f.name.length)
+namesOf((f) => (f.name.length.toString, f.name.length))
+pathOf((f) => f.name.length.toString)
+pathsOf((f) => f.name.length.toString)
+pathsOf((f) => (f.name.length.toString, f.name.length))
+pathStringOf((f) => f.name.length.toString)
+pathStringsOf((f) => (f.name.length.toString, f.name.length))
 `);
 
 export const codeToPreserve = withImportStatements(`
-	nameOf((f) => f)
-	nameOf((f) => {return f})
-	String(pathsOf)
-	pathsOf(["2"][1][""][index].length)
-	pathsOf((f) => [f.name.length.toString, f.name.length])
-	pathsOf((f) => [f.name, f])
-	pathsOf((f) => [f.name, globalThis.fetch])
+nameOf((f) => f)
+nameOf((f) => {return f})
+String(pathsOf)
+pathsOf(["2"][1][""][index].length)
+pathsOf((f) => [f.name.length.toString, f.name.length])
+pathsOf((f) => [f.name, f])
+pathsOf((f) => [f.name, globalThis.fetch])
 `);
