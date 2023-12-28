@@ -12,7 +12,7 @@ export function nameOf<T>(obj: T, selector: NameSelector<T>): string;
 
 export function nameOf<T>(
 	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>
+	selectorOrNil?: NameSelector<T>,
 ): string {
 	// @ts-ignore
 	const names = namesOf(objOrSelector, selectorOrNil);

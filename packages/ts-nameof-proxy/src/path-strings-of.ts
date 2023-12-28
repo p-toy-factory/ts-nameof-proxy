@@ -11,7 +11,7 @@ export function pathStringsOf<T>(obj: T, selector: NameSelector<T>): string[];
 
 export function pathStringsOf<T>(
 	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>
+	selectorOrNil?: NameSelector<T>,
 ): string[] {
 	return pathsOf(objOrSelector, selectorOrNil).map(mapper);
 }

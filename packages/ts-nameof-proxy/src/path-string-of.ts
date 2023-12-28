@@ -11,7 +11,7 @@ export function pathStringOf<T>(obj: T, selector: NameSelector<T>): string;
 
 export function pathStringOf<T>(
 	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>
+	selectorOrNil?: NameSelector<T>,
 ): string {
 	// @ts-ignore
 	const separatedPath = pathStringsOf(objOrSelector, selectorOrNil);

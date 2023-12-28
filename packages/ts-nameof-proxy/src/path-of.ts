@@ -12,7 +12,7 @@ export function pathOf<T>(obj: T, selector?: NameSelector<T>): string[];
 
 export function pathOf<T>(
 	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>
+	selectorOrNil?: NameSelector<T>,
 ): string[] {
 	return pathsOf(objOrSelector, selectorOrNil)[0] ?? [];
 }

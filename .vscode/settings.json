@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["nameof", "pinkchampagne"],
+  "eslint.experimental.useFlatConfig": true,
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ]
+}

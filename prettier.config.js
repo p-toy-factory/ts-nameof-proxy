@@ -1,1 +1,1 @@
-module.exports = require("./packages/prettier-config");
+module.exports = require("@pinkchampagne/prettier-config");
