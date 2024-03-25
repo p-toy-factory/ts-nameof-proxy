@@ -3,7 +3,8 @@ import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { NodePath } from "babel__traverse";
-import { equals, head, identity, last, length, map, pipe } from "rambda";
+import { Either as E, Function as F, Option as O, ReadonlyArray } from "effect";
+import { head, identity, last, map, pipe } from "rambda";
 import { match, P } from "ts-pattern";
 
 /**
@@ -15,13 +16,13 @@ import { match, P } from "ts-pattern";
  */
 function getInitialObjectNameOfMemberExpression(
 	node: t.MemberExpression,
-): string {
+): E.Either<string, TypeError> {
 	return match(node.object)
-		.when(t.isIdentifier, (object) => object.name)
+		.when(t.isIdentifier, (object) => E.right(object.name))
 		.when(t.isMemberExpression, getInitialObjectNameOfMemberExpression)
-		.otherwise(() => {
-			throw new TypeError(`Unexpected node type: ${node.object.type}`);
-		});
+		.otherwise(() =>
+			E.left(new TypeError(`Unexpected node type: ${node.object.type}`)),
+		);
 }
 
 function propertiesToAST(
@@ -66,25 +67,12 @@ const exportedFunctionNames = Object.keys(propertiesMappers) as Array<
 	keyof typeof propertiesMappers
 >;
 
-function isCalleeIdentifierToTransform(
+export function getCallExpressionToTransform(
 	path: NodePath<t.Identifier>,
-	parentPath: NodePath<t.Node>,
-	moduleSource: string,
-): parentPath is NodePath<t.CallExpression> {
-	if (path.parentPath !== parentPath) {
-		throw new TypeError("path.parentPath !== parentPath");
-	}
-	return (
-		path.parentPath.isCallExpression() &&
-		exportedFunctionNames.some((name) =>
-			path.referencesImport(moduleSource, name),
-		)
-	);
-}
-
-const isEmptyArray = pipe(length, equals(0));
-
-export function tryGetCallExpressionToTransform(path: NodePath<t.Identifier>) {
+): O.Option<{
+	callExpressionPath: NodePath<t.CallExpression>;
+	functionName: keyof typeof propertiesMappers;
+}> {
 	const { parentPath } = path;
 	if (
 		parentPath.isCallExpression() &&
@@ -94,156 +82,174 @@ export function tryGetCallExpressionToTransform(path: NodePath<t.Identifier>) {
 		// Avoid the expressions like `String(pathStringOf)`
 		parentPath.node.callee === path.node
 	) {
-		return {
+		return O.some({
 			callExpressionPath: parentPath,
 			functionName: path.node.name as keyof typeof propertiesMappers,
-		};
+		});
 	}
-	return undefined;
+	return O.none();
 }
 
-export function tryGetInlineArrowFunctionSelector(
+export function getInlineArrowFunctionSelector(
 	callExpressionPath: NodePath<t.CallExpression>,
 ) {
 	const args = callExpressionPath.node.arguments;
 	const selector = args[1] ?? args[0];
 	if (
-		selector &&
-		(t.isFunctionExpression(selector) || t.isArrowFunctionExpression(selector))
+		t.isFunctionExpression(selector) ||
+		t.isArrowFunctionExpression(selector)
 	) {
-		return {
-			selector,
-		};
+		return O.some(selector);
 	}
-	return undefined;
+	return O.none();
 }
 
 export function getMemberExpressionsIfCanBeTransformed(
 	selector: t.FunctionExpression | t.ArrowFunctionExpression,
-) {
+): E.Either<O.Option<t.MemberExpression[]>, TypeError> {
 	if (!t.isArrowFunctionExpression(selector)) {
-		return undefined;
+		return E.right(O.none());
 	}
 
 	const selectorParam = selector.params[0];
 	if (!t.isIdentifier(selectorParam)) {
-		return undefined;
+		return E.right(O.none());
 	}
 
-	const memberExpressions = (() => {
-		switch (selector.body.type) {
-			case "MemberExpression":
-				return [selector.body];
-
-			case "SequenceExpression": {
-				if (
-					selector.body.expressions.length > 0 &&
-					selector.body.expressions.every((expr) => t.isMemberExpression(expr))
-				) {
-					return selector.body.expressions as t.MemberExpression[];
-				}
+	const memberExpressionsOption = match(selector.body)
+		.when(t.isMemberExpression, (expr) => O.some([expr]))
+		.when(t.isSequenceExpression, ({ expressions }) => {
+			if (
+				expressions.length > 0 &&
+				expressions.every((expr) => t.isMemberExpression(expr))
+			) {
+				return O.some(expressions as t.MemberExpression[]);
 			}
+			return O.none();
+		})
+		.otherwise(() => O.none());
 
-			default:
-				// The body of node of identify function is a identifier node
-				return [];
-		}
-	})();
+	return F.pipe(
+		memberExpressionsOption,
+		O.map((memberExpressions) => {
+			let error: TypeError | undefined;
 
-	// ✅ nameOf(p => p.name.length)
-	// ❌ nameOf(p => a.name.length)
-	const proxyName = selectorParam.name;
-	const hasUnexpectedSelector = memberExpressions.some((expr) => {
-		try {
-			const initialObjectName = getInitialObjectNameOfMemberExpression(expr);
-			return proxyName !== initialObjectName;
-		} catch (error) {
-			console.log(error);
-			return true;
-		}
-	});
+			// ✅ nameOf(p => p.name.length)
+			// ❌ nameOf(p => a.name.length)
+			const proxyName = selectorParam.name;
 
-	if (hasUnexpectedSelector || memberExpressions.length === 0) {
-		return undefined;
-	}
+			const hasUnexpectedSelector = memberExpressions.some((expr) =>
+				E.match(getInitialObjectNameOfMemberExpression(expr), {
+					onLeft: (err) => ((error = err), true),
+					onRight: (initialObjectName) => proxyName !== initialObjectName,
+				}),
+			);
 
-	return {
-		memberExpressions,
-	};
+			if (error) {
+				return E.left(error);
+			}
+			return E.right(
+				hasUnexpectedSelector ? O.none() : O.some(memberExpressions),
+			);
+		}),
+		O.match({
+			onNone: () => E.right(O.none()),
+			onSome: identity,
+		}),
+	);
 }
 
-function getMemberExpressionPropertyString(expr: t.MemberExpression): string {
+function getMemberExpressionPropertyString(
+	expr: t.MemberExpression,
+): E.Either<string, TypeError> {
 	const { property } = expr;
 	switch (property.type) {
 		case "Identifier":
-			return property.name;
+			return E.right(property.name);
 
 		case "NumericLiteral":
 		case "StringLiteral":
-			return property.value.toString();
+			return E.right(property.value.toString());
 
 		default:
-			throw new TypeError(`Unexpected property type: '${property.type}'`);
+			return E.left(
+				new TypeError(`Unexpected property type: '${property.type}'`),
+			);
 	}
 }
 
-function getMemberExpressionPath(expr: t.MemberExpression): string[] {
-	const name = getMemberExpressionPropertyString(expr);
+function getMemberExpressionPath(
+	expr: t.MemberExpression,
+): E.Either<string[], TypeError> {
+	return F.pipe(
+		getMemberExpressionPropertyString(expr),
+		E.flatMap((name) => {
+			switch (expr.object.type) {
+				case "MemberExpression":
+					return F.pipe(
+						getMemberExpressionPath(expr.object),
+						E.map((path) => [...path, name]),
+					);
 
-	switch (expr.object.type) {
-		case "MemberExpression":
-			return [...getMemberExpressionPath(expr.object), name];
-
-		default:
-			return [name];
-	}
+				default:
+					return E.right([name]);
+			}
+		}),
+	);
 }
 
 function identifierVisitor(path: NodePath<t.Identifier>) {
-	const callExpressionPathResult = tryGetCallExpressionToTransform(path);
-	if (!callExpressionPathResult) {
-		return;
-	}
-	const { callExpressionPath, functionName } = callExpressionPathResult;
+	O.andThen(
+		getCallExpressionToTransform(path),
+		({ callExpressionPath, functionName }) => {
+			F.pipe(
+				getInlineArrowFunctionSelector(callExpressionPath),
+				O.map(getMemberExpressionsIfCanBeTransformed),
+				O.andThen((memberExpressionsEither) => {
+					F.pipe(
+						memberExpressionsEither,
+						E.andThen((memberExpressionsOption) => {
+							O.andThen(memberExpressionsOption, (memberExpressions) => {
+								const reducer = (
+									pathEither: E.Either<string[][], TypeError>,
+									expr: t.MemberExpression,
+								) => {
+									return F.pipe(
+										getMemberExpressionPath(expr),
+										E.flatMap((path) =>
+											F.pipe(
+												pathEither,
+												E.map((paths) => [...paths, path]),
+											),
+										),
+									);
+								};
 
-	const selectorResult = tryGetInlineArrowFunctionSelector(callExpressionPath);
-	if (!selectorResult) {
-		return;
-	}
-	const { selector } = selectorResult;
+								const mapper = propertiesMappers[functionName];
 
-	const memberExpressionsResult =
-		getMemberExpressionsIfCanBeTransformed(selector);
-	if (!memberExpressionsResult) {
-		return;
-	}
-	const { memberExpressions } = memberExpressionsResult;
-
-	let hasUnexpectedNodeType = false;
-
-	const propertiesArrays = memberExpressions.reduce<string[][]>(
-		(propertiesArrays, expr) => {
-			try {
-				const properties = getMemberExpressionPath(expr);
-				return [...propertiesArrays, properties];
-			} catch (error) {
-				console.log(error);
-				hasUnexpectedNodeType = true;
-				return propertiesArrays;
-			}
+								return F.pipe(
+									memberExpressions.reduce(reducer, E.right([])),
+									E.match({
+										onLeft: console.error,
+										onRight: pipe(mapper, propertiesToAST, (ast) =>
+											callExpressionPath.replaceWith(ast),
+										),
+									}),
+								);
+							});
+						}),
+						E.match({
+							onLeft: console.error,
+							onRight: noop,
+						}),
+					);
+				}),
+			);
 		},
-		[],
-	);
-
-	if (hasUnexpectedNodeType) {
-		return;
-	}
-
-	const mapper = propertiesMappers[functionName];
-	pipe(mapper, propertiesToAST, (ast) => callExpressionPath.replaceWith(ast))(
-		propertiesArrays,
 	);
 }
+
+const noop = () => {};
 
 export function transform(code: string): string {
 	const ast = parser.parse(code, {

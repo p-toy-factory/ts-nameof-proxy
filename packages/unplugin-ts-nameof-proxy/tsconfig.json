@@ -1,17 +1,15 @@
 {
-	"include": [
-		"./src"
-	],
-	"compilerOptions": {
-		"rootDir": "./src",
-		"outDir": "./dist",
-		"module": "ESNext",
-		"target": "ESNext",
-		"allowJs": true,
-		"moduleResolution": "node",
-		"noUncheckedIndexedAccess": true,
-		"strict": true,
-		"resolveJsonModule": true,
-		"removeComments": true
-	}
+  "compilerOptions": {
+    "target": "ESNext",
+    "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "./dist",
+    "removeComments": true
+  },
+  "include": ["./src", "tests"]
 }

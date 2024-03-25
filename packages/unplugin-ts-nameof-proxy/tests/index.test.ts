@@ -1,4 +1,5 @@
 import { expect, test } from "vitest";
+
 import { transform } from "../src/core";
 import { codeToOptimize, codeToPreserve } from "./fixtures";
 
