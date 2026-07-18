@@ -1,0 +1,31 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["eslint", "typescript", "unicorn", "import", "node"],
+	"rules": {
+		"dot-notation": "error",
+		"eqeqeq": "error",
+		"no-else-return": "error",
+		"no-extra-bind": "error",
+		"no-extra-label": "error",
+		"no-implicit-coercion": "error",
+		"no-lonely-if": "error",
+		"no-unneeded-ternary": "error",
+		"no-useless-computed-key": "error",
+		"no-useless-rename": "error",
+		"no-useless-return": "error",
+		"no-var": "error",
+		"object-shorthand": "error",
+		"prefer-arrow-callback": "error",
+		"prefer-const": "error",
+		"prefer-destructuring": "error",
+		"prefer-exponentiation-operator": "error",
+		"prefer-object-has-own": "error",
+		"prefer-object-spread": "error",
+		"prefer-template": "error",
+		"yoda": "error",
+		"import/first": "error",
+		"import/newline-after-import": "error",
+		"import/no-duplicates": "error",
+		"unicorn/prefer-type-error": "error"
+	}
+}

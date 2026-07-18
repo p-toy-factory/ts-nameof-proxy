@@ -18,24 +18,27 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v6.0.8
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6.4.0
         with:
           cache: "pnpm"
-          node-version: "18"
+          node-version-file: ".node-version"
 
       - name: Enable corepack
         run: corepack enable
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
 
       - name: Test
         run: pnpm run test
+
+      - name: Build
+        run: pnpm run build

@@ -1,5 +1,6 @@
 import { namesOf } from "../src/names-of";
 import { student } from "./fixtures";
+import { describe, expect, test } from "vitest";
 
 describe("namesOf", () => {
 	test("Do not use type parameter", () => {

@@ -10,12 +10,12 @@ export function pathStringsOf<T>(selector: NameSelector<T>): string[];
 export function pathStringsOf<T>(obj: T, selector: NameSelector<T>): string[];
 
 export function pathStringsOf<T>(
-	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>,
+  objOrSelector: T | NameSelector<T>,
+  selectorOrNil?: NameSelector<T>,
 ): string[] {
-	return pathsOf(objOrSelector, selectorOrNil).map(mapper);
+  return pathsOf<T>(objOrSelector as T, selectorOrNil).map(mapper);
 }
 
 function mapper(separatedPath: string[]) {
-	return `['${separatedPath.join("']['")}']`;
+  return `['${separatedPath.join("']['")}']`;
 }

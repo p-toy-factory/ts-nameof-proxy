@@ -4,22 +4,16 @@
 		"type": "git",
 		"url": "https://github.com/p-toy-factory/ts-nameof-proxy"
 	},
-	"packageManager": "pnpm@8.13.1",
+	"packageManager": "pnpm@11.14.0",
+	"engines": {
+		"node": ">=24.11.0 <25"
+	},
 	"scripts": {
-		"prepare": "husky install",
-		"check": "beachball check",
-		"release": "beachball publish -y -m \"chore(release): applying package updates\"",
-		"change": "beachball change",
 		"build": "pnpm -C packages/ts-nameof-proxy run build",
 		"lint": "pnpm -C packages/ts-nameof-proxy run lint",
 		"test": "pnpm -C packages/ts-nameof-proxy run test"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.0.3",
-		"@commitlint/config-conventional": "^17.0.3",
-		"@pinkchampagne/prettier-config": "^1.0.0",
-		"beachball": "^2.37.0",
-		"husky": "^8.0.1",
-		"prettier": "^3.1.1"
+		"oxfmt": "^0.59.0"
 	}
 }

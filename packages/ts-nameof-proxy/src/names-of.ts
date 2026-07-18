@@ -11,8 +11,8 @@ export function namesOf<T>(selector: NameSelector<T>): string[];
 export function namesOf<T>(obj: T, selector: NameSelector<T>): string[];
 
 export function namesOf<T>(
-	objOrSelector: T | NameSelector<T>,
-	selectorOrNil?: NameSelector<T>,
+  objOrSelector: T | NameSelector<T>,
+  selectorOrNil?: NameSelector<T>,
 ): string[] {
-	return pathsOf(objOrSelector, selectorOrNil).map(last);
+  return pathsOf<T>(objOrSelector as T, selectorOrNil).map(last);
 }

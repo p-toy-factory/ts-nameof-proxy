@@ -1,5 +1,6 @@
 import { pathOf } from "../src";
 import { student } from "./fixtures";
+import { describe, expect, test } from "vitest";
 
 describe("pathOf", () => {
 	test("Do not use type parameter", () => {

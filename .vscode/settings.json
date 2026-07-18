@@ -1,5 +1,11 @@
 {
-  "cSpell.words": ["nameof", "pinkchampagne"],
+  "cSpell.words": [
+		"nameof",
+		"oxfmt",
+		"oxlint",
+		"pinkchampagne"
+	],
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "eslint.experimental.useFlatConfig": true,
   "eslint.workingDirectories": [
     {
