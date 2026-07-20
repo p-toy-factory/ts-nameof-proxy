@@ -11,7 +11,7 @@
 	"scripts": {
 		"build": "pnpm -C packages/ts-nameof-proxy run build",
 		"lint": "pnpm -C packages/ts-nameof-proxy run lint",
-		"test": "pnpm -C packages/ts-nameof-proxy run test"
+		"test": "pnpm -C packages/ts-nameof-proxy run test && pnpm -C packages/unplugin-ts-nameof-proxy run test"
 	},
 	"devDependencies": {
 		"oxfmt": "^0.59.0"

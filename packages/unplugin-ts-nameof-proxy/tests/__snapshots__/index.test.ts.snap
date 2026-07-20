@@ -13,13 +13,13 @@ exports[`Expect code will be optimized 1`] = `
 
 exports[`Expect code won't be optimized 1`] = `
 "import { nameOf, namesOf, pathOf, pathsOf, pathStringOf, pathStringsOf } from "ts-nameof-proxy";
-nameOf(f => f);
-nameOf(f => {
+nameOf((f) => f);
+nameOf((f) => {
   return f;
 });
 String(pathsOf);
 pathsOf(["2"][1][""][index].length);
-pathsOf(f => [f.name.length.toString, f.name.length]);
-pathsOf(f => [f.name, f]);
-pathsOf(f => [f.name, globalThis.fetch]);"
+pathsOf((f) => [f.name.length.toString, f.name.length]);
+pathsOf((f) => [f.name, f]);
+pathsOf((f) => [f.name, globalThis.fetch]);"
 `;

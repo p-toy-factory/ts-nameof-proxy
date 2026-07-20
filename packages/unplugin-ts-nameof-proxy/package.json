@@ -9,41 +9,37 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**/*.*"
   ],
   "scripts": {
-    "build": "rimraf ./dist && rollup --config",
-    "lint": "eslint src --cache && prettier --check src",
-    "lint:fix": "eslint src --cache --fix  && prettier --write src",
-    "test": "vitest"
+    "build": "tsdown",
+    "fmt": "oxfmt --check src",
+    "fmt:fix": "oxfmt --write src",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint src --fix",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@babel/generator": "^7.24.7",
-    "@babel/parser": "^7.24.7",
-    "@babel/traverse": "^7.24.7",
-    "@babel/types": "^7.24.7",
     "effect": "^3.4.7",
     "rambda": "^9.2.1",
     "ts-pattern": "^5.2.0",
-    "unplugin": "^1.11.0"
+    "unplugin": "^1.11.0",
+    "yuku-analyzer": "^0.6.5",
+    "yuku-ast": "^0.1.7",
+    "yuku-codegen": "^0.6.5",
+    "yuku-parser": "^0.6.5"
   },
   "devDependencies": {
-    "@types/babel__generator": "^7.6.8",
-    "@types/babel__traverse": "^7.20.6",
-    "@types/eslint": "^8.56.10",
-    "eslint": "^9.6.0",
-    "eslint-config-pcp": "2.0.0-beta.6",
+    "@rspack/core": "^2.1.3",
+    "oxlint": "^1.74.0",
+    "tsdown": "^0.22.9",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3",
     "vitest": "^1.6.0"
