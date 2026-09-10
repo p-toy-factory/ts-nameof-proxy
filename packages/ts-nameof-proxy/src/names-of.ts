@@ -1,6 +1,6 @@
-import { pathsOf } from "./paths-of";
-import { NameSelector } from "./types";
-import { last } from "./utils";
+import { pathsOf } from "./paths-of.ts";
+import type { NameSelector } from "./types.ts";
+import { last } from "./utils.ts";
 
 /**
  * @example

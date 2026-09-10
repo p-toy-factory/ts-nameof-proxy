@@ -42,3 +42,17 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Check package versions
+        working-directory: packages/ts-nameof-proxy
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          import { readFileSync } from "node:fs";
+          const npm = JSON.parse(readFileSync("package.json", "utf8"));
+          const jsr = JSON.parse(readFileSync("jsr.json", "utf8"));
+          assert.equal(jsr.version, npm.version, "npm and JSR versions must match");
+          NODE
+
+      - name: Check JSR publishing
+        run: pnpm run check:jsr

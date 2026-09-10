@@ -1,5 +1,5 @@
-import { NameSelector } from "./types";
-import { last } from "./utils";
+import type { NameSelector } from "./types.ts";
+import { last } from "./utils.ts";
 
 /**
  * @example

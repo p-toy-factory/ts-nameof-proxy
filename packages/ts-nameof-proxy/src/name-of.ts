@@ -1,5 +1,5 @@
-import { namesOf } from "./names-of";
-import { NameSelector } from "./types";
+import { namesOf } from "./names-of.ts";
+import type { NameSelector } from "./types.ts";
 
 /**
  * @example

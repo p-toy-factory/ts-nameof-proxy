@@ -6,13 +6,23 @@ Type safely generate property name or path of variable, referenced properties ca
 
 ## Install
 
+Install from npm:
+
 ```
 npm install ts-nameof-proxy
+```
+
+Or install from JSR:
+
+```
+npx jsr add @pcp/ts-nameof-proxy
 ```
 
 ## Usage
 
 ```ts
+import { nameOf, namesOf, pathOf, pathStringOf, pathStringsOf, pathsOf } from "ts-nameof-proxy";
+
 nameOf(student, (s) => s.age); // "age"
 nameOf(student, (s) => s.name.length); // "length"
 nameOf<Student>((s) => s.name.length); // "length"
@@ -34,6 +44,12 @@ pathStringsOf(student, (s) => (s.name, s.name.firstName[0])); // ["['name']", "[
 pathStringsOf<Student>((s) => (s.name, s.name.firstName[0])); // ["['name']", "['name']['firstName']['0']"]
 ```
 
+When installed from JSR, import the same API from the JSR package name:
+
+```ts
+import { nameOf } from "@pcp/ts-nameof-proxy";
+```
+
 ## Limitations
 
 The example below is NOT feasible:
@@ -47,34 +63,27 @@ nameOf(student, (student) => student); // ❌ Will throw error
 
 ```tsx
 const people = [
-	{ name: { firstName: "John", lastName: "Doe" } },
-	{ name: { firstName: "Jane", lastName: "Smith" } },
+  { name: { firstName: "John", lastName: "Doe" } },
+  { name: { firstName: "Jane", lastName: "Smith" } },
 ];
 
 <Formik initialValues={people} onSubmit={() => {}}>
-	<Form>
-		{({ values }) =>
-			values.map((person, index) => (
-				<div key={person.name.firstName}>
-					<Field
-						name={pathStringOf(
-							values,
-							(values) => values[index].name.firstName
-						)}
-					/>
-					<Field
-						name={pathStringOf(values, (values) => values[index].name.lastName)}
-					/>
-				</div>
-			))
-		}
-		{/*
+  <Form>
+    {({ values }) =>
+      values.map((person, index) => (
+        <div key={person.name.firstName}>
+          <Field name={pathStringOf(values, (values) => values[index].name.firstName)} />
+          <Field name={pathStringOf(values, (values) => values[index].name.lastName)} />
+        </div>
+      ))
+    }
+    {/*
 			Output:
 			<Field name="['0']['name']['firstName']" />
 			<Field name="['0']['name']['lastName']" />
 			<Field name="['1']['name']['firstName']" />
 			<Field name="['1']['name']['lastName']" />
 		*/}
-	</Form>
+  </Form>
 </Formik>;
 ```

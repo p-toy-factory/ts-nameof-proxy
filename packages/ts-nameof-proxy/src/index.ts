@@ -1,7 +1,7 @@
-export { nameOf } from "./name-of";
-export { namesOf } from "./names-of";
-export { pathOf } from "./path-of";
-export { pathStringOf } from "./path-string-of";
-export { pathStringsOf } from "./path-strings-of";
-export { pathsOf } from "./paths-of";
-export type { NameSelector } from "./types";
+export { nameOf } from "./name-of.ts";
+export { namesOf } from "./names-of.ts";
+export { pathOf } from "./path-of.ts";
+export { pathStringOf } from "./path-string-of.ts";
+export { pathStringsOf } from "./path-strings-of.ts";
+export { pathsOf } from "./paths-of.ts";
+export type { NameSelector } from "./types.ts";

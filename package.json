@@ -1,19 +1,21 @@
 {
-	"private": true,
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/p-toy-factory/ts-nameof-proxy"
-	},
-	"packageManager": "pnpm@11.14.0",
-	"engines": {
-		"node": ">=24.11.0 <25"
-	},
-	"scripts": {
-		"build": "pnpm -C packages/ts-nameof-proxy run build",
-		"lint": "pnpm -C packages/ts-nameof-proxy run lint",
-		"test": "pnpm -C packages/ts-nameof-proxy run test"
-	},
-	"devDependencies": {
-		"oxfmt": "^0.59.0"
-	}
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p-toy-factory/ts-nameof-proxy"
+  },
+  "scripts": {
+    "build": "pnpm -C packages/ts-nameof-proxy run build",
+    "lint": "pnpm -C packages/ts-nameof-proxy run lint",
+    "test": "pnpm -C packages/ts-nameof-proxy run test",
+    "check:jsr": "pnpm -C packages/ts-nameof-proxy run check:jsr",
+    "publish:jsr": "pnpm -C packages/ts-nameof-proxy run publish:jsr"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.59.0"
+  },
+  "engines": {
+    "node": ">=24.11.0 <25"
+  },
+  "packageManager": "pnpm@11.14.0"
 }
